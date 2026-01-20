@@ -4,6 +4,13 @@ const resources = {
       key: 'platform-admins',
       title: 'Platform Admins',
       fields: [
+        {
+          key: 'platform_role_id',
+          label: 'Platform Role',
+          type: 'select',
+          ref: 'platform-roles',
+          refLabel: 'name'
+        },
         { key: 'first_name', label: 'First Name', type: 'text', required: true },
         { key: 'last_name', label: 'Last Name', type: 'text', required: true },
         { key: 'email', label: 'Email', type: 'email', required: true },
@@ -39,8 +46,22 @@ const resources = {
       key: 'platform-role-permissions',
       title: 'Platform Role Permissions',
       fields: [
-        { key: 'platform_role_id', label: 'Role ID', type: 'number', required: true },
-        { key: 'platform_permission_id', label: 'Permission ID', type: 'number', required: true }
+        {
+          key: 'platform_role_id',
+          label: 'Role',
+          type: 'select',
+          ref: 'platform-roles',
+          refLabel: 'name',
+          required: true
+        },
+        {
+          key: 'platform_permission_id',
+          label: 'Permission',
+          type: 'select',
+          ref: 'platform-permissions',
+          refLabel: 'key_name',
+          required: true
+        }
       ]
     }
   ],
@@ -69,8 +90,21 @@ const resources = {
       key: 'branches',
       title: 'Branches',
       fields: [
-        { key: 'merchant_id', label: 'Merchant ID', type: 'number', required: true },
-        { key: 'parent_branch_id', label: 'Parent Branch ID', type: 'number' },
+        {
+          key: 'merchant_id',
+          label: 'Merchant',
+          type: 'select',
+          ref: 'merchants',
+          refLabel: 'name',
+          required: true
+        },
+        {
+          key: 'parent_branch_id',
+          label: 'Parent Branch',
+          type: 'select',
+          ref: 'branches',
+          refLabel: 'name'
+        },
         { key: 'name', label: 'Name', type: 'text', required: true },
         { key: 'code', label: 'Code', type: 'text', required: true },
         {
@@ -87,8 +121,29 @@ const resources = {
       key: 'users',
       title: 'Users',
       fields: [
-        { key: 'merchant_id', label: 'Merchant ID', type: 'number', required: true },
-        { key: 'branch_id', label: 'Branch ID', type: 'number', required: true },
+        {
+          key: 'merchant_id',
+          label: 'Merchant',
+          type: 'select',
+          ref: 'merchants',
+          refLabel: 'name',
+          required: true
+        },
+        {
+          key: 'branch_id',
+          label: 'Branch',
+          type: 'select',
+          ref: 'branches',
+          refLabel: 'name',
+          required: true
+        },
+        {
+          key: 'merchant_role_id',
+          label: 'Merchant Role',
+          type: 'select',
+          ref: 'branch-roles',
+          refLabel: 'name'
+        },
         { key: 'first_name', label: 'First Name', type: 'text', required: true },
         { key: 'last_name', label: 'Last Name', type: 'text', required: true },
         { key: 'email', label: 'Email', type: 'email', required: true },
@@ -111,7 +166,14 @@ const resources = {
       key: 'branch-roles',
       title: 'Branch Roles',
       fields: [
-        { key: 'branch_id', label: 'Branch ID', type: 'number', required: true },
+        {
+          key: 'branch_id',
+          label: 'Branch',
+          type: 'select',
+          ref: 'branches',
+          refLabel: 'name',
+          required: true
+        },
         { key: 'name', label: 'Name', type: 'text', required: true },
         { key: 'description', label: 'Description', type: 'text' },
         { key: 'is_system', label: 'System Role', type: 'boolean' }
@@ -121,8 +183,22 @@ const resources = {
       key: 'branch-role-permissions',
       title: 'Branch Role Permissions',
       fields: [
-        { key: 'branch_role_id', label: 'Role ID', type: 'number', required: true },
-        { key: 'permission_id', label: 'Permission ID', type: 'number', required: true }
+        {
+          key: 'branch_role_id',
+          label: 'Role',
+          type: 'select',
+          ref: 'branch-roles',
+          refLabel: 'name',
+          required: true
+        },
+        {
+          key: 'permission_id',
+          label: 'Permission',
+          type: 'select',
+          ref: 'permissions',
+          refLabel: 'key_name',
+          required: true
+        }
       ]
     }
   ]

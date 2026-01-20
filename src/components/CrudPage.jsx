@@ -14,6 +14,23 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
 
+const roleInfoConfig = {
+  'platform-roles': {
+    linkResource: 'platform-role-permissions',
+    roleKey: 'platform_role_id',
+    permissionKey: 'platform_permission_id',
+    permissionResource: 'platform-permissions',
+    permissionLabel: 'key_name'
+  },
+  'branch-roles': {
+    linkResource: 'branch-role-permissions',
+    roleKey: 'branch_role_id',
+    permissionKey: 'permission_id',
+    permissionResource: 'permissions',
+    permissionLabel: 'key_name'
+  }
+};
+
 function formatValue(value) {
   if (value === null || value === undefined) {
     return '-';
@@ -32,8 +49,14 @@ export default function CrudPage({ resource }) {
   const [editRow, setEditRow] = useState(null);
   const [form, setForm] = useState({});
   const [query, setQuery] = useState('');
+  const [refOptions, setRefOptions] = useState({});
+  const [permissionMap, setPermissionMap] = useState({});
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoRole, setInfoRole] = useState(null);
+  const [infoPermissions, setInfoPermissions] = useState([]);
 
   const fields = useMemo(() => resource.fields, [resource.fields]);
+  const roleConfig = roleInfoConfig[resource.key];
 
   const load = async () => {
     try {
@@ -51,6 +74,84 @@ export default function CrudPage({ resource }) {
   useEffect(() => {
     load();
   }, [resource.key]);
+
+  useEffect(() => {
+    const loadRefOptions = async () => {
+      const refFields = fields.filter((field) => field.ref);
+      if (refFields.length === 0) {
+        setRefOptions({});
+        return;
+      }
+
+      try {
+        const results = await Promise.all(
+          refFields.map(async (field) => {
+            const data = await api.list(field.ref);
+            const items = Array.isArray(data) ? data : [];
+            const options = items.map((item) => {
+              const labelKey = field.refLabel;
+              const labelValue =
+                (labelKey && item[labelKey]) ||
+                item.name ||
+                item.email ||
+                item.key_name ||
+                `#${item.id}`;
+              return {
+                value: String(item.id),
+                label: `${labelValue} (#${item.id})`
+              };
+            });
+            return [field.key, options];
+          })
+        );
+        setRefOptions(Object.fromEntries(results));
+      } catch (err) {
+        setRefOptions({});
+      }
+    };
+
+    loadRefOptions();
+  }, [fields, resource.key]);
+
+  useEffect(() => {
+    const loadPermissions = async () => {
+      if (!roleConfig) {
+        setPermissionMap({});
+        return;
+      }
+
+      try {
+        const [links, permissions] = await Promise.all([
+          api.list(roleConfig.linkResource),
+          api.list(roleConfig.permissionResource)
+        ]);
+        const permissionIndex = new Map(
+          (Array.isArray(permissions) ? permissions : []).map((item) => [
+            item.id,
+            item[roleConfig.permissionLabel] || item.name || item.key_name || `#${item.id}`
+          ])
+        );
+        const map = {};
+        (Array.isArray(links) ? links : []).forEach((link) => {
+          const roleId = link[roleConfig.roleKey];
+          const permissionId = link[roleConfig.permissionKey];
+          if (!roleId) {
+            return;
+          }
+          if (!map[roleId]) {
+            map[roleId] = [];
+          }
+          const label = permissionIndex.get(permissionId) || `#${permissionId}`;
+          map[roleId].push(label);
+        });
+        setPermissionMap(map);
+      } catch (err) {
+        setPermissionMap({});
+      }
+    };
+
+    loadPermissions();
+  }, [roleConfig]);
 
   const resetForm = () => {
     const initial = {};
@@ -73,6 +174,8 @@ export default function CrudPage({ resource }) {
       const value = row[field.key];
       if (field.type === 'boolean') {
         next[field.key] = Boolean(value);
+      } else if (field.type === 'select' || field.ref) {
+        next[field.key] = value === null || value === undefined ? '' : String(value);
       } else {
         next[field.key] = value ?? '';
       }
@@ -95,6 +198,10 @@ export default function CrudPage({ resource }) {
           return;
         }
         if (field.type === 'number') {
+          payload[field.key] = Number(value);
+          return;
+        }
+        if (field.ref) {
           payload[field.key] = Number(value);
           return;
         }
@@ -130,6 +237,7 @@ export default function CrudPage({ resource }) {
   };
 
   const headers = ['id', ...fields.map((field) => field.key)];
+  const tableHeaders = roleConfig ? [...headers, 'permission_count'] : headers;
   const statusKey = fields.find((field) => field.key === 'status')?.key;
   const stats = useMemo(() => {
     const total = rows.length;
@@ -150,9 +258,22 @@ export default function CrudPage({ resource }) {
     }
     const search = query.toLowerCase();
     return rows.filter((row) =>
-      headers.some((key) => String(row[key] ?? '').toLowerCase().includes(search))
+      tableHeaders.some((key) => {
+        if (key === 'permission_count') {
+          return String((permissionMap[row.id] || []).length).includes(search);
+        }
+        return String(row[key] ?? '').toLowerCase().includes(search);
+      })
     );
-  }, [rows, query, headers]);
+  }, [rows, query, tableHeaders, permissionMap]);
+
+  const permissionCount = (roleId) => (permissionMap[roleId] || []).length;
+
+  const openInfo = (row) => {
+    setInfoRole(row);
+    setInfoPermissions(permissionMap[row.id] || []);
+    setInfoOpen(true);
+  };
 
   const statusPills = Object.entries(stats.statusCounts || {}).slice(0, 3);
 
@@ -216,7 +337,7 @@ export default function CrudPage({ resource }) {
         <Table className="min-w-[720px]">
           <TableHeader className="bg-[var(--surface)]">
             <TableRow>
-              {headers.map((header) => (
+              {tableHeaders.map((header) => (
                 <TableHead key={header}>{header}</TableHead>
               ))}
               <TableHead>Actions</TableHead>
@@ -234,9 +355,13 @@ export default function CrudPage({ resource }) {
             ) : (
               filteredRows.map((row) => (
                 <TableRow key={row.id}>
-                  {headers.map((header) => (
+                  {tableHeaders.map((header) => (
                     <TableCell key={`${row.id}-${header}`}>
-                      {header === 'status' ? (
+                      {header === 'permission_count' ? (
+                        <Badge className="border border-[var(--border)] bg-[var(--surface)]">
+                          {permissionCount(row.id)}
+                        </Badge>
+                      ) : header === 'status' ? (
                         <Badge
                           className={
                             String(row[header]).toLowerCase() === 'active'
@@ -253,6 +378,11 @@ export default function CrudPage({ resource }) {
                   ))}
                   <TableCell>
                     <div className="flex flex-wrap gap-2">
+                      {roleConfig && (
+                        <Button size="sm" variant="outline" onClick={() => openInfo(row)}>
+                          Info
+                        </Button>
+                      )}
                       <Button size="sm" variant="secondary" onClick={() => openEdit(row)}>
                         Edit
                       </Button>
@@ -279,7 +409,8 @@ export default function CrudPage({ resource }) {
           </DialogHeader>
           <div className="grid gap-4 md:grid-cols-2">
             {fields.map((field) => {
-              if (field.type === 'select') {
+              if (field.type === 'select' || field.ref) {
+                const options = field.ref ? refOptions[field.key] || [] : field.options || [];
                 return (
                   <label key={field.key} className="grid gap-2 text-sm font-medium text-[var(--muted-ink)] md:col-span-2">
                     {field.label}
@@ -289,9 +420,9 @@ export default function CrudPage({ resource }) {
                       onChange={(event) => handleChange(field.key, event.target.value)}
                     >
                       <option value="">Select</option>
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
+                      {options.map((option) => (
+                        <option key={option.value || option} value={option.value || option}>
+                          {option.label || option}
                         </option>
                       ))}
                     </select>
@@ -334,6 +465,52 @@ export default function CrudPage({ resource }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {roleConfig && (
+        <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
+          <DialogTrigger asChild>
+            <span />
+          </DialogTrigger>
+          <DialogContent className="max-h-[80vh] w-[min(90vw,720px)] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Role Info</DialogTitle>
+              <DialogDescription>Role details and assigned permissions.</DialogDescription>
+            </DialogHeader>
+            {infoRole && (
+              <div className="grid gap-4 text-sm">
+                <div className="grid gap-1 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-ink)]">Role</p>
+                  <p className="text-lg font-semibold">{infoRole.name || `#${infoRole.id}`}</p>
+                  <div className="text-xs text-[var(--muted-ink)]">
+                    {infoRole.description || 'No description'}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-ink)]">
+                    Permissions ({infoPermissions.length})
+                  </p>
+                  {infoPermissions.length === 0 ? (
+                    <p className="mt-2 text-sm text-[var(--muted-ink)]">No permissions assigned.</p>
+                  ) : (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {infoPermissions.map((perm) => (
+                        <Badge key={perm} className="border border-[var(--border)] bg-[var(--surface)]">
+                          {perm}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setInfoOpen(false)}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
