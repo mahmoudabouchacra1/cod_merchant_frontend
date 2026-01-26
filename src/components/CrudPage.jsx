@@ -60,6 +60,7 @@ export default function CrudPage({ resource, permissions = [] }) {
   const [open, setOpen] = useState(false);
   const [editRow, setEditRow] = useState(null);
   const [form, setForm] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
   const [query, setQuery] = useState('');
   const [refOptions, setRefOptions] = useState({});
   const [permissionMap, setPermissionMap] = useState({});
@@ -173,6 +174,8 @@ export default function CrudPage({ resource, permissions = [] }) {
       initial[field.key] = field.type === 'boolean' ? false : '';
     });
     setForm(initial);
+    setFieldErrors({});
+    setError('');
   };
 
   const openCreate = () => {
@@ -195,16 +198,45 @@ export default function CrudPage({ resource, permissions = [] }) {
       }
     });
     setForm(next);
+    setFieldErrors({});
+    setError('');
     setOpen(true);
   };
 
   const handleChange = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setFieldErrors((prev) => {
+      if (!prev[key]) {
+        return prev;
+      }
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
+
+  const validateForm = () => {
+    const nextErrors = {};
+    fields.forEach((field) => {
+      if (!field.required || field.type === 'boolean') {
+        return;
+      }
+      const value = form[field.key];
+      if (value === '' || value === null || value === undefined) {
+        nextErrors[field.key] = `${field.label} is required.`;
+      }
+    });
+    setFieldErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     try {
       setError('');
+      if (!validateForm()) {
+        setError('Please fill in the required fields.');
+        return;
+      }
       const payload = {};
       fields.forEach((field) => {
         const value = form[field.key];
@@ -485,11 +517,16 @@ export default function CrudPage({ resource, permissions = [] }) {
             {fields.map((field) => {
               if (field.type === 'select' || field.ref) {
                 const options = field.ref ? refOptions[field.key] || [] : field.options || [];
+                const hasError = Boolean(fieldErrors[field.key]);
                 return (
                   <label key={field.key} className="grid gap-2 text-sm font-medium text-[var(--muted-ink)] md:col-span-2">
                     {field.label}
                     <select
-                      className="h-11 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--ink)] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                      className={`h-11 rounded-2xl border bg-[var(--surface)] px-4 text-sm text-[var(--ink)] shadow-sm focus-visible:outline-none focus-visible:ring-2 ${
+                        hasError
+                          ? 'border-red-300 focus-visible:ring-red-200'
+                          : 'border-[var(--border)] focus-visible:ring-[var(--accent)]'
+                      }`}
                       value={form[field.key] ?? ''}
                       onChange={(event) => handleChange(field.key, event.target.value)}
                     >
@@ -500,6 +537,9 @@ export default function CrudPage({ resource, permissions = [] }) {
                         </option>
                       ))}
                     </select>
+                    {hasError && (
+                      <span className="text-xs text-red-600">{fieldErrors[field.key]}</span>
+                    )}
                   </label>
                 );
               }
@@ -518,6 +558,7 @@ export default function CrudPage({ resource, permissions = [] }) {
                 );
               }
 
+              const hasError = Boolean(fieldErrors[field.key]);
               return (
                 <label key={field.key} className="grid gap-2 text-sm font-medium text-[var(--muted-ink)]">
                   {field.label}
@@ -526,7 +567,11 @@ export default function CrudPage({ resource, permissions = [] }) {
                     value={form[field.key] ?? ''}
                     onChange={(event) => handleChange(field.key, event.target.value)}
                     required={field.required}
+                    className={hasError ? 'border-red-300 focus-visible:ring-red-200' : ''}
                   />
+                  {hasError && (
+                    <span className="text-xs text-red-600">{fieldErrors[field.key]}</span>
+                  )}
                 </label>
               );
             })}
