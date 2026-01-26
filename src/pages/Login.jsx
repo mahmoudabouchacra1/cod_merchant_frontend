@@ -20,9 +20,41 @@ export default function LoginPage({ onSuccess }) {
   const [mode, setMode] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const validateForm = () => {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
+
+    if (mode === 'register') {
+      if (!merchantName.trim()) {
+        return 'Merchant name is required.';
+      }
+      if (!firstName.trim() || !lastName.trim()) {
+        return 'Owner first and last name are required.';
+      }
+    }
+
+    if (!trimmedEmail || !emailValid) {
+      return 'Enter a valid email address.';
+    }
+
+    if (trimmedPassword.length < 6) {
+      return 'Password must be at least 6 characters.';
+    }
+
+    return '';
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      setSuccess('');
+      return;
+    }
     try {
       setLoading(true);
       setError('');
@@ -67,8 +99,8 @@ export default function LoginPage({ onSuccess }) {
 
   return (
     <div className="min-h-screen px-4 py-12 text-[var(--ink)]">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="glass-panel relative overflow-hidden rounded-[32px] p-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+        <div className="glass-panel relative overflow-hidden rounded-[32px] p-6 sm:p-8 lg:p-10">
           <div className="absolute -right-24 -top-24 h-52 w-52 rounded-full bg-[var(--accent)]/20 blur-3xl" />
           <div className="absolute -bottom-24 left-10 h-60 w-60 rounded-full bg-[var(--sun)]/20 blur-3xl" />
           <div className="relative z-10 flex h-full flex-col">
@@ -110,7 +142,7 @@ export default function LoginPage({ onSuccess }) {
           </div>
         </div>
 
-        <div className="surface-panel rounded-[32px] p-10">
+        <div className="surface-panel rounded-[32px] p-6 sm:p-8 lg:p-10">
           <form className="grid gap-5" onSubmit={handleSubmit}>
             <div>
               <h2 className="font-display text-2xl">
@@ -272,12 +304,22 @@ export default function LoginPage({ onSuccess }) {
                 : mode === 'register'
                 ? 'Owner Password'
                 : 'Admin Password'}
-              <Input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="pr-16"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[var(--muted-ink)] hover:text-[var(--ink)]"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
 
             <div className="grid gap-3">

@@ -58,6 +58,11 @@ export default function App() {
               setAuthReady(true);
             }
           });
+      })
+      .finally(() => {
+        if (isMounted) {
+          setAuthReady(true);
+        }
       });
     return () => {
       isMounted = false;

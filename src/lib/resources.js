@@ -26,8 +26,7 @@ const resources = {
           label: 'Status',
           type: 'select',
           options: ['active', 'inactive', 'suspended']
-        },
-        { key: 'last_login_at', label: 'Last Login At', type: 'datetime-local' }
+        }
       ]
     },
     {
@@ -191,8 +190,7 @@ const resources = {
         { key: 'email', label: 'Email', type: 'email', required: true },
         { key: 'phone', label: 'Phone', type: 'text' },
         { key: 'password', label: 'Password', type: 'password', required: true },
-        { key: 'status', label: 'Status', type: 'select', options: ['active', 'inactive', 'blocked'] },
-        { key: 'last_login_at', label: 'Last Login At', type: 'datetime-local' }
+        { key: 'status', label: 'Status', type: 'select', options: ['active', 'inactive', 'blocked'] }
       ]
     },
     {
