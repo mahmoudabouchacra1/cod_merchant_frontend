@@ -16,7 +16,7 @@ export default function Layout({ onLogout, permissions, authType }) {
                   Oversee merchants, assign roles, and keep every storefront consistent.
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:bg-[var(--surface-soft)]"

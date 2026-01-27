@@ -33,6 +33,8 @@ body {
   background-image:
     radial-gradient(circle at top left, #f7f7f7 0%, transparent 45%),
     radial-gradient(circle at top right, #f3f3f3 0%, transparent 50%);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 #root {
@@ -165,4 +167,49 @@ main {
 
 body {
   overflow-x: hidden;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .responsive-table tbody td {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .responsive-table tbody tr {
+    padding: 0.5rem 0;
+  }
+
+  .responsive-table tbody td {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .responsive-table tbody td::before {
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+  }
+
+  .cell-clamp {
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  .responsive-table tbody td {
+    padding: 0.6rem 0.8rem;
+  }
 }
