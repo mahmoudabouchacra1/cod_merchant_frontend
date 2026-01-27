@@ -137,6 +137,7 @@ export default function CrudPage({ resource, permissions = [] }) {
   const [infoPermissions, setInfoPermissions] = useState([]);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [showPasswords, setShowPasswords] = useState({});
 
   const fields = useMemo(() => resource.fields, [resource.fields]);
   const roleConfig = roleInfoConfig[resource.key];
@@ -652,12 +653,35 @@ export default function CrudPage({ resource, permissions = [] }) {
               return (
                 <label key={field.key} className="grid gap-2 text-sm font-medium text-[var(--muted-ink)]">
                   {field.label}
-                  <Input
-                    type={field.type}
-                    value={form[field.key] ?? ''}
-                    onChange={(event) => handleChange(field.key, event.target.value)}
-                    className={hasError ? 'border-red-300 focus-visible:ring-red-200' : ''}
-                  />
+                  {field.type === 'password' ? (
+                    <div className="relative">
+                      <Input
+                        type={showPasswords[field.key] ? 'text' : 'password'}
+                        value={form[field.key] ?? ''}
+                        onChange={(event) => handleChange(field.key, event.target.value)}
+                        className={`pr-16 ${hasError ? 'border-red-300 focus-visible:ring-red-200' : ''}`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowPasswords((prev) => ({
+                            ...prev,
+                            [field.key]: !prev[field.key]
+                          }))
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[var(--muted-ink)] hover:text-[var(--ink)]"
+                      >
+                        {showPasswords[field.key] ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
+                  ) : (
+                    <Input
+                      type={field.type}
+                      value={form[field.key] ?? ''}
+                      onChange={(event) => handleChange(field.key, event.target.value)}
+                      className={hasError ? 'border-red-300 focus-visible:ring-red-200' : ''}
+                    />
+                  )}
                   {hasError && (
                     <span className="text-xs text-red-600">{fieldErrors[field.key]}</span>
                   )}
