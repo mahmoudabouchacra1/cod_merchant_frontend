@@ -435,7 +435,7 @@ export default function CrudPage({ resource, permissions = [] }) {
 
   return (
     <div className="space-y-6">
-      <div className="surface-panel rise-fade rounded-[32px] px-6 py-6">
+      <div className="surface-panel rise-fade rounded-[32px] px-4 py-5 sm:px-6 sm:py-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.38em] text-[var(--muted-ink)]">
@@ -447,11 +447,11 @@ export default function CrudPage({ resource, permissions = [] }) {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm sm:px-4 sm:py-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--muted-ink)]">Total</p>
               <p className="text-lg font-semibold">{stats.total}</p>
             </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm sm:px-4 sm:py-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--muted-ink)]">Highest ID</p>
               <p className="text-lg font-semibold">{stats.maxId || '-'}</p>
             </div>
@@ -491,10 +491,12 @@ export default function CrudPage({ resource, permissions = [] }) {
       </div>
 
       <div className="soft-panel overflow-hidden rounded-[32px]">
-        <Table className="min-w-[720px]">
+        <Table className="responsive-table w-full">
           <TableHeader className="bg-black text-white">
             <TableRow className="bg-black hover:bg-black">
-              <TableHead className="text-white">Profile</TableHead>
+              <TableHead className="text-white w-[240px] max-w-none sm:w-[300px]">
+                Profile
+              </TableHead>
               {tableHeaders.map((header) => (
                 <TableHead key={header} className="text-white">
                   {header}
@@ -530,7 +532,10 @@ export default function CrudPage({ resource, permissions = [] }) {
 
                 return (
                   <TableRow key={row.id}>
-                    <TableCell>
+                    <TableCell
+                      data-label="Profile"
+                      className="w-[240px] max-w-none sm:w-[300px] whitespace-normal break-words"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-sm font-semibold text-[var(--accent-strong)]">
                           {getInitials(avatarText)}
@@ -546,7 +551,7 @@ export default function CrudPage({ resource, permissions = [] }) {
                       </div>
                     </TableCell>
                     {tableHeaders.map((header) => (
-                      <TableCell key={`${row.id}-${header}`}>
+                      <TableCell key={`${row.id}-${header}`} data-label={header}>
                         {header === 'permission_count' ? (
                           <Badge className="border border-[var(--border)] bg-[var(--surface)]">
                             {permissionCount(row.id)}
@@ -560,7 +565,7 @@ export default function CrudPage({ resource, permissions = [] }) {
                         )}
                       </TableCell>
                     ))}
-                    <TableCell>
+                    <TableCell data-label="Actions">
                       <div className="flex flex-wrap gap-2">
                         {roleConfig && (
                           <Button size="sm" variant="outline" onClick={() => openInfo(row)}>

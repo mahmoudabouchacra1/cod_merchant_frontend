@@ -2,10 +2,10 @@ import * as React from 'react';
 import { cn } from '../../lib/utils';
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
-  <div className="w-full overflow-auto">
+  <div className="w-full overflow-x-hidden">
     <table
       ref={ref}
-      className={cn('w-full caption-bottom text-sm', className)}
+      className={cn('w-full table-fixed caption-bottom text-sm', className)}
       {...props}
     />
   </div>
@@ -34,14 +34,21 @@ TableRow.displayName = 'TableRow';
 const TableHead = React.forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
-    className={cn('h-12 px-4 text-left align-middle text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--muted-ink)]', className)}
+    className={cn(
+      'h-11 px-3 text-left align-middle text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-ink)] whitespace-normal break-all max-w-0',
+      className
+    )}
     {...props}
   />
 ));
 TableHead.displayName = 'TableHead';
 
 const TableCell = React.forwardRef(({ className, ...props }, ref) => (
-  <td ref={ref} className={cn('p-4 align-middle text-sm text-[var(--ink)]', className)} {...props} />
+  <td
+    ref={ref}
+    className={cn('p-3 align-top text-[13px] text-[var(--ink)] whitespace-normal break-all max-w-0', className)}
+    {...props}
+  />
 ));
 TableCell.displayName = 'TableCell';
 

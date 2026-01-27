@@ -105,3 +105,56 @@ main {
     animation: none;
   }
 }
+
+.responsive-table thead {
+  display: none;
+}
+
+.responsive-table tbody tr {
+  display: block;
+  border-bottom: 1px solid var(--border);
+  padding: 0.3rem 0;
+}
+
+.responsive-table tbody td {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+}
+
+.responsive-table tbody td::before {
+  content: attr(data-label);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+@media (min-width: 640px) {
+  .responsive-table thead {
+    display: table-header-group;
+  }
+
+  .responsive-table tbody tr {
+    display: table-row;
+    padding: 0;
+  }
+
+  .responsive-table tbody td {
+    display: table-cell;
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .responsive-table tbody td::before {
+    content: none;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}

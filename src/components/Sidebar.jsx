@@ -57,8 +57,8 @@ export default function Sidebar({ permissions = [], authType }) {
   };
 
   return (
-    <aside className="rise-fade flex w-full gap-4 lg:h-[calc(100vh-1rem)] lg:w-auto lg:flex-none lg:items-start">
-      <div className="glass-panel flex h-[calc(100vh-1rem)] w-16 flex-col items-center gap-3 rounded-[26px] py-5 lg:w-20 lg:gap-4 lg:py-6">
+    <aside className="rise-fade flex w-full flex-col gap-4 sm:flex-row lg:h-[calc(100vh-1rem)] lg:w-auto lg:flex-none lg:items-start">
+      <div className="glass-panel flex h-auto w-16 flex-col items-center gap-3 rounded-[26px] py-5 lg:h-[calc(100vh-1rem)] lg:w-20 lg:gap-4 lg:py-6">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
           CM
         </div>
@@ -94,7 +94,7 @@ export default function Sidebar({ permissions = [], authType }) {
           isCollapsed ? 'w-0 opacity-0 pointer-events-none' : 'w-full opacity-100 lg:w-[330px]'
         )}
       >
-        <div className="glass-panel flex h-[calc(100vh-1rem)] flex-col gap-6 overflow-y-auto rounded-[32px] px-6 py-7">
+        <div className="glass-panel flex h-auto flex-col gap-6 overflow-y-auto rounded-[32px] px-5 py-6 sm:px-6 sm:py-7 lg:h-[calc(100vh-1rem)]">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
