@@ -39,6 +39,7 @@ body {
 
 #root {
   min-height: 100vh;
+  min-width: 1200px;
 }
 
 .font-display {
@@ -117,54 +118,22 @@ main {
 }
 
 .responsive-table thead {
-  display: none;
+  display: table-header-group;
 }
 
 .responsive-table tbody tr {
-  display: block;
-  border-bottom: 1px solid var(--border);
-  padding: 0.3rem 0;
+  display: table-row;
+  padding: 0;
 }
 
 .responsive-table tbody td {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 1rem;
-  font-size: 0.9rem;
+  display: table-cell;
+  padding: 1rem;
+  font-size: 0.875rem;
 }
 
 .responsive-table tbody td::before {
-  content: attr(data-label);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--muted-ink);
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-@media (min-width: 640px) {
-  .responsive-table thead {
-    display: table-header-group;
-  }
-
-  .responsive-table tbody tr {
-    display: table-row;
-    padding: 0;
-  }
-
-  .responsive-table tbody td {
-    display: table-cell;
-    padding: 1rem;
-    font-size: 0.875rem;
-  }
-
-  .responsive-table tbody td::before {
-    content: none;
-  }
+  content: none;
 }
 
 body {
@@ -181,48 +150,7 @@ body {
 }
 
 @media (max-width: 900px) {
-  .responsive-table tbody td {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 640px) {
-  .responsive-table tbody tr {
-    padding: 0.5rem 0;
-  }
-
-  .responsive-table tbody td {
-    flex-direction: column;
-    gap: 0.35rem;
-    max-width: 100%;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-  }
-
-  .responsive-table tbody td::before {
-    font-size: 0.55rem;
-    letter-spacing: 0.25em;
-  }
-
-  .responsive-table tbody td > * {
-    min-width: 0;
-    max-width: 100%;
-    word-break: inherit;
-    overflow-wrap: inherit;
-  }
-
-  .cell-clamp {
-    -webkit-line-clamp: 2;
-  }
-}
-
-@media (max-width: 480px) {
   body {
-    font-size: 0.95rem;
-  }
-
-  .responsive-table tbody td {
-    padding: 0.6rem 0.8rem;
+    overflow-x: auto;
   }
 }
