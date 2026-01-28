@@ -5,7 +5,7 @@ const Table = React.forwardRef(({ className, ...props }, ref) => (
   <div className="w-full overflow-x-auto">
     <table
       ref={ref}
-      className={cn('min-w-[1100px] table-auto caption-bottom text-sm', className)}
+      className={cn('w-full table-fixed caption-bottom text-sm', className)}
       {...props}
     />
   </div>
@@ -35,7 +35,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      'h-11 px-3 text-left align-middle text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-ink)] whitespace-nowrap',
+      'h-11 px-3 text-left align-middle text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-ink)] whitespace-normal break-words',
       className
     )}
     {...props}
