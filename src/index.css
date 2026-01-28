@@ -195,11 +195,21 @@ body {
   .responsive-table tbody td {
     flex-direction: column;
     gap: 0.35rem;
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .responsive-table tbody td::before {
     font-size: 0.55rem;
     letter-spacing: 0.25em;
+  }
+
+  .responsive-table tbody td > * {
+    min-width: 0;
+    max-width: 100%;
+    word-break: inherit;
+    overflow-wrap: inherit;
   }
 
   .cell-clamp {
