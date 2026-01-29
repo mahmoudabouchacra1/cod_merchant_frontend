@@ -57,58 +57,57 @@ export default function Sidebar({ permissions = [], authType }) {
   };
 
   return (
-    <aside className="rise-fade flex w-full flex-col gap-4 sm:flex-row lg:h-[calc(100vh-1rem)] lg:w-auto lg:flex-none lg:items-start">
-      <div className="glass-panel flex h-auto w-full items-center gap-3 rounded-[26px] px-4 py-3 sm:w-16 sm:flex-col sm:items-center sm:py-5 lg:h-[calc(100vh-1rem)] lg:w-20 lg:gap-4 lg:py-6">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
-          CM
+    <aside className="rise-fade w-full lg:w-auto lg:flex-none">
+      <div className="glass-panel flex w-full flex-col gap-4 rounded-[32px] px-4 py-4 sm:flex-row sm:gap-4 sm:px-5 sm:py-5 lg:h-[calc(100vh-1rem)] lg:w-[420px] lg:flex-row lg:gap-5 lg:px-5 lg:py-6">
+        <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-center sm:justify-start">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
+            CM
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsCollapsed((prev) => !prev)}
+            aria-expanded={!isCollapsed}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-soft)]"
+          >
+            <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
+          </button>
+          <div className="no-scrollbar flex flex-1 flex-row gap-2 overflow-x-auto sm:flex-col sm:overflow-visible">
+            {railItems.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                aria-label={item.label}
+                className={cn(
+                  'flex h-11 w-11 items-center justify-center rounded-2xl border border-transparent text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:border-[var(--border)] hover:bg-[var(--surface)]',
+                  item.active && 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--ink)] shadow-sm'
+                )}
+              >
+                <SidebarIcon name={item.key} />
+              </button>
+            ))}
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={() => setIsCollapsed((prev) => !prev)}
-          aria-expanded={!isCollapsed}
-          className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-soft)]"
-        >
-          <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
-        </button>
-        <div className="no-scrollbar flex flex-1 flex-row gap-2 overflow-x-auto sm:flex-col sm:overflow-visible">
-          {railItems.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              aria-label={item.label}
-              className={cn(
-                'flex h-11 w-11 items-center justify-center rounded-2xl border border-transparent text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:border-[var(--border)] hover:bg-[var(--surface)]',
-                item.active && 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--ink)] shadow-sm'
-              )}
-            >
-              <SidebarIcon name={item.key} />
-            </button>
-          ))}
-        </div>
-        <div className="mt-2 flex flex-col items-center gap-3" />
-      </div>
 
-      <div
-        className={cn(
-          'overflow-hidden transition-all duration-300 ease-out',
-          isCollapsed ? 'w-0 opacity-0 pointer-events-none' : 'w-full opacity-100 lg:w-[330px]'
-        )}
-      >
-        <div className="glass-panel flex h-auto flex-col gap-6 overflow-y-auto rounded-[32px] px-5 py-6 sm:px-6 sm:py-7 lg:h-[calc(100vh-1rem)]">
+        <div
+          className={cn(
+            'flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto transition-all duration-300 ease-out',
+            isCollapsed ? 'w-0 opacity-0 pointer-events-none' : 'opacity-100'
+          )}
+        >
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
-              CM
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
+                CM
+              </div>
+              <div>
+                <h1 className="font-display text-[26px] leading-tight tracking-[0.04em]">COD Merchant</h1>
+                <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-[var(--muted-ink)]">
+                  Merchant Office
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="font-display text-[26px] leading-tight tracking-[0.04em]">COD Merchant</h1>
-              <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-[var(--muted-ink)]">
-                Merchant Office
-              </p>
-            </div>
+            <span className="h-2.5 w-2.5 rounded-full bg-[var(--accent)] shadow-[0_0_12px_rgba(12,107,92,0.8)]" />
           </div>
-          <span className="h-2.5 w-2.5 rounded-full bg-[var(--accent)] shadow-[0_0_12px_rgba(12,107,92,0.8)]" />
-        </div>
 
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs text-[var(--muted-ink)]">
           <p className="font-display text-[12px] font-semibold uppercase tracking-[0.5em] text-[var(--ink)]">

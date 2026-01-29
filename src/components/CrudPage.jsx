@@ -491,8 +491,9 @@ export default function CrudPage({ resource, permissions = [] }) {
         </div>
       </div>
 
-      <div className="soft-panel overflow-hidden rounded-[32px]">
-        <Table className="responsive-table w-full">
+      <div className="soft-panel rounded-[32px]">
+        <div className="max-h-[70vh] overflow-auto md:max-h-[calc(100vh-320px)]">
+          <Table className="responsive-table w-full">
           <TableHeader className="bg-black text-white">
             <TableRow className="bg-black hover:bg-black">
               <TableHead className="text-white w-[240px] max-w-none sm:w-[300px]">
@@ -592,7 +593,8 @@ export default function CrudPage({ resource, permissions = [] }) {
               })
             )}
           </TableBody>
-        </Table>
+          </Table>
+        </div>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
