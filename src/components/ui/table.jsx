@@ -2,15 +2,12 @@ import * as React from 'react';
 import { cn } from '../../lib/utils';
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
-  <div className="flex w-full items-stretch gap-3">
-    <div className="flex-1 overflow-x-auto">
-      <table
-        ref={ref}
-        className={cn('w-full table-fixed caption-bottom text-sm', className)}
-        {...props}
-      />
-    </div>
-    <div className="w-3 shrink-0 rounded-full bg-[var(--surface-soft)] shadow-inner" aria-hidden="true" />
+  <div className="w-full overflow-x-auto table-scroll">
+    <table
+      ref={ref}
+      className={cn('w-full table-fixed caption-bottom text-sm', className)}
+      {...props}
+    />
   </div>
 ));
 Table.displayName = 'Table';
