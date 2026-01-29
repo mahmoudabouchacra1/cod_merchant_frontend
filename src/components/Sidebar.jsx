@@ -6,21 +6,21 @@ const sections = [
   {
     title: 'Platform',
     links: [
-      { label: 'Admins', to: '/platform/platform-admins', permission: 'view-platform-admin' },
-      { label: 'Roles', to: '/platform/platform-roles', permission: 'view-platform-role' },
-      { label: 'Permissions', to: '/platform/platform-permissions', permission: 'view-platform-permission' },
-      { label: 'Role Permissions', to: '/platform/platform-role-permissions', permission: 'view-platform-role-permission' }
+      { label: 'Admins', to: '/platform/platform-admins', permission: 'view-platform-admin', icon: 'users' },
+      { label: 'Roles', to: '/platform/platform-roles', permission: 'view-platform-role', icon: 'shield' },
+      { label: 'Permissions', to: '/platform/platform-permissions', permission: 'view-platform-permission', icon: 'key' },
+      { label: 'Role Permissions', to: '/platform/platform-role-permissions', permission: 'view-platform-role-permission', icon: 'list' }
     ]
   },
   {
     title: 'Merchant',
     links: [
-      { label: 'Merchants', to: '/merchant/merchants', permission: 'view-merchant' },
-      { label: 'Branches', to: '/merchant/branches', permission: 'view-branch' },
-      { label: 'Users', to: '/merchant/users', permission: 'view-user' },
-      { label: 'Permissions', to: '/merchant/permissions', permission: 'view-permission' },
-      { label: 'Branch Roles', to: '/merchant/branch-roles', permission: 'view-branch-role' },
-      { label: 'Branch Role Permissions', to: '/merchant/branch-role-permissions', permission: 'view-branch-role-permission' }
+      { label: 'Merchants', to: '/merchant/merchants', permission: 'view-merchant', icon: 'store' },
+      { label: 'Branches', to: '/merchant/branches', permission: 'view-branch', icon: 'branch' },
+      { label: 'Users', to: '/merchant/users', permission: 'view-user', icon: 'user' },
+      { label: 'Permissions', to: '/merchant/permissions', permission: 'view-permission', icon: 'key' },
+      { label: 'Branch Roles', to: '/merchant/branch-roles', permission: 'view-branch-role', icon: 'id' },
+      { label: 'Branch Role Permissions', to: '/merchant/branch-role-permissions', permission: 'view-branch-role-permission', icon: 'list' }
     ]
   }
 ];
@@ -189,7 +189,7 @@ export default function Sidebar({ permissions = [], authType }) {
                               }
                             >
                               <span className="text-[var(--muted-ink)]">
-                                <SidebarIcon name="dot" />
+                                <SidebarIcon name={link.icon || 'dot'} />
                               </span>
                               <span className="tracking-[0.01em]">{link.label}</span>
                             </NavLink>
@@ -356,6 +356,61 @@ function SidebarIcon({ name }) {
           <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.6" />
           <path d="M9.5 9a2.8 2.8 0 0 1 5.3 1c0 2-2.8 2-2.8 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           <circle cx="12" cy="17" r="1" fill="currentColor" />
+        </svg>
+      );
+    case 'users':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M3.5 18c1.6-3 8.4-3 10 0" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <circle cx="17.5" cy="10" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M14.5 18c.7-1.4 2.7-2.2 4-2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      );
+    case 'shield':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M9.5 12.5l1.8 1.8 3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'key':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <circle cx="9" cy="10" r="3.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M12 10h8v3h-2v2h-2v2h-2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'list':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <path d="M8 7h12M8 12h12M8 17h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <circle cx="4" cy="7" r="1" fill="currentColor" />
+          <circle cx="4" cy="12" r="1" fill="currentColor" />
+          <circle cx="4" cy="17" r="1" fill="currentColor" />
+        </svg>
+      );
+    case 'store':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <path d="M4 10h16v9H4z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M3 10l2-6h14l2 6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M9 19v-5h6v5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'branch':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <path d="M5 20V7l7-3 7 3v13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M9 20v-5h6v5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'id':
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
+          <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <circle cx="9" cy="12" r="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M13 11h5M13 14h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       );
     case 'user':
