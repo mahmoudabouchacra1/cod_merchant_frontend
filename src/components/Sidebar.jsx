@@ -51,23 +51,24 @@ export default function Sidebar({ permissions = [], authType }) {
     <aside className="rise-fade flex-none">
       <div
         className={cn(
-          'glass-panel flex flex-row gap-4 rounded-[32px] px-4 py-4 sm:gap-4 sm:px-5 sm:py-5 lg:h-[calc(100vh-1rem)] lg:gap-5 lg:px-5 lg:py-6',
+          'glass-panel flex rounded-[32px] px-4 py-4 sm:px-5 sm:py-5 lg:h-[calc(100vh-1rem)] lg:px-5 lg:py-6',
+          isCollapsed ? 'flex-row gap-4 sm:gap-4 lg:gap-5' : 'flex-col gap-6',
           isCollapsed ? 'w-[96px] px-4' : 'w-[280px] sm:w-[360px] lg:w-[420px]'
         )}
       >
-        <div className="flex w-20 flex-col items-center justify-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
-            CM
-          </div>
-          <button
-            type="button"
-            onClick={() => setIsCollapsed((prev) => !prev)}
-            aria-expanded={!isCollapsed}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-soft)]"
-          >
-            <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
-          </button>
-          {isCollapsed && (
+        {isCollapsed && (
+          <div className="flex w-20 flex-col items-center justify-start gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-xs font-semibold uppercase tracking-[0.35em] text-white shadow-lg">
+              CM
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsCollapsed((prev) => !prev)}
+              aria-expanded={!isCollapsed}
+              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-soft)]"
+            >
+              <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
+            </button>
             <div className="no-scrollbar flex flex-1 flex-col items-center gap-2 overflow-y-auto pb-2 pt-1">
               {visibleLinks.map((link) => (
                 <NavLink
@@ -85,8 +86,8 @@ export default function Sidebar({ permissions = [], authType }) {
                 </NavLink>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {!isCollapsed && (
           <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto transition-all duration-300 ease-out opacity-100">
@@ -102,7 +103,17 @@ export default function Sidebar({ permissions = [], authType }) {
                   </p>
                 </div>
               </div>
-              <span className="h-2.5 w-2.5 rounded-full bg-[var(--accent)] shadow-[0_0_12px_rgba(12,107,92,0.8)]" />
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsCollapsed((prev) => !prev)}
+                  aria-expanded={!isCollapsed}
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:bg-[var(--surface-soft)]"
+                >
+                  <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
+                </button>
+                <span className="h-2.5 w-2.5 rounded-full bg-[var(--accent)] shadow-[0_0_12px_rgba(12,107,92,0.8)]" />
+              </div>
             </div>
 
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-xs text-[var(--muted-ink)]">
