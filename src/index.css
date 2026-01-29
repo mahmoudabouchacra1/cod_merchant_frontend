@@ -137,7 +137,7 @@ main {
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .no-scrollbar {
