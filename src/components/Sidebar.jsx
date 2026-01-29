@@ -67,27 +67,28 @@ export default function Sidebar({ permissions = [], authType }) {
           >
             <span className="text-base font-semibold">{isCollapsed ? '>' : '<'}</span>
           </button>
+          {isCollapsed && (
+            <div className="no-scrollbar flex flex-1 flex-col items-center gap-2 overflow-y-auto pb-2 pt-1">
+              {visibleLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    cn(
+                      'flex h-11 w-11 items-center justify-center rounded-2xl border border-transparent text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:border-[var(--border)] hover:bg-[var(--surface)]',
+                      isActive && 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--ink)] shadow-sm'
+                    )
+                  }
+                  aria-label={link.label}
+                >
+                  <SidebarIcon name={link.icon || 'dot'} />
+                </NavLink>
+              ))}
+            </div>
+          )}
         </div>
 
-        {isCollapsed ? (
-          <div className="flex min-w-0 flex-1 flex-col items-center gap-2 overflow-y-auto pb-2">
-            {visibleLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  cn(
-                    'flex h-11 w-11 items-center justify-center rounded-2xl border border-transparent text-[var(--muted-ink)] transition hover:-translate-y-0.5 hover:border-[var(--border)] hover:bg-[var(--surface)]',
-                    isActive && 'border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--ink)] shadow-sm'
-                  )
-                }
-                aria-label={link.label}
-              >
-                <SidebarIcon name={link.icon || 'dot'} />
-              </NavLink>
-            ))}
-          </div>
-        ) : (
+        {!isCollapsed && (
           <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto transition-all duration-300 ease-out opacity-100">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
